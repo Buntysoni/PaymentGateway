@@ -1,0 +1,39 @@
+﻿@model PaymentGateway.Controllers.Payment
+@{
+    ViewData["Title"] = "PhonePe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .payment-form {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 400px;
+            margin: 50px auto;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+<div class="payment-form">
+    <h3 class="text-center">Payment Information</h3>
+    <h5 class="text-center">(PhonePe Payment Gateway)</h5>
+    <form id="paymentForm" asp-action="PhonePe" asp-controller="Home">
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="text" class="form-control mb-3" id="amount" asp-for="Amount" placeholder="100.00" required>
+        </div>
+        <button type="submit" class="btn btn-custom btn-block">Pay Now</button>
+    </form>
+</div>
+
