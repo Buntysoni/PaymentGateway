@@ -51,8 +51,8 @@
         })
             .then(response => response.json())
             .then(data => {
-                if (data.id) {
-                    stripe.redirectToCheckout({ sessionId: data.id });
+                if (data.sessionId) {
+                    stripe.redirectToCheckout({ sessionId: data.sessionId });
                 } else {
                     console.error(data.error || "An error occurred.");
                 }

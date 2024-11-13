@@ -86,6 +86,19 @@ namespace PaymentGateway.Controllers
             return View();
         }
 
+        public IActionResult Success(string gateway = "")
+        {
+            ViewBag.Gateway = gateway;
+            return View();
+        }
+        
+        public IActionResult Failed(string gateway = "")
+        {
+            ViewBag.Gateway = gateway;
+            return View();
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -41,8 +41,8 @@ namespace PaymentGateway.Controllers
                 },
             },
                 Mode = "payment",
-                SuccessUrl = "http://localhost:4200/success",
-                CancelUrl = "http://localhost:4200/cancel",
+                SuccessUrl = "https://localhost:7192/home/success?gateway=stripe",
+                CancelUrl = "https://localhost:7192/home/failed?gateway=stripe",
             };
 
             var service = new SessionService();
