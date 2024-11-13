@@ -114,9 +114,4 @@ namespace PaymentGateway.Controllers
             public static string? ApiEndpoint { get; set; } = "PhonePe_Api_Endpoint";
         }
     }
-    public class Payment
-    {
-        public decimal Amount { get; set; }
-        public string? Mobile { get; set; }
-    }
 }

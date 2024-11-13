@@ -9,7 +9,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="UNLEIN.Utilities" Version="2.0.0" />
+    <PackageReference Include="Stripe.net" Version="47.0.0" />
+    <PackageReference Include="UNLEIN.Utilities" Version="2.0.1" />
   </ItemGroup>
 
 </Project>

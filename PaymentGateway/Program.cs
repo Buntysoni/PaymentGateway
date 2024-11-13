@@ -1,5 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
+Stripe.StripeConfiguration.ApiKey = builder.Configuration["Secretkey"];
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

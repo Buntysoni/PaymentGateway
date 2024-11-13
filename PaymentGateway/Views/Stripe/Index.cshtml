@@ -1,0 +1,62 @@
+﻿@model PaymentGateway.Models.Payment
+@{
+    ViewData["Title"] = "PhonePe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .payment-form {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        max-width: 400px;
+        margin: 50px auto;
+    }
+
+    .btn-custom {
+        background-color: #007bff;
+        color: white;
+    }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+</style>
+
+<div class="payment-form">
+    <h3 class="text-center">Payment Information</h3>
+    <h5 class="text-center">(Stripe Payment Gateway)</h5>
+    <form id="payment-form">
+        <input type="text" class="form-control mb-3" id="amount" asp-for="Amount" placeholder="100.00" required>
+        <div id="card-element"></div>
+        <button type="button" id="btnpay" class="btn btn-custom btn-block">Pay</button>
+    </form>
+    <div id="payment-message"></div>
+</div>
+<script>
+    var stripe = Stripe('@ViewBag.StripePublishableKey');
+
+    document.getElementById("btnpay").addEventListener("click", function () {
+        fetch('@Url.Action("CreatePaymentIntent", "Stripe")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ amount: $("#amount").val() }) // Replace with actual amount
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.id) {
+                    stripe.redirectToCheckout({ sessionId: data.id });
+                } else {
+                    console.error(data.error || "An error occurred.");
+                }
+            });
+    });
+</script>
+
