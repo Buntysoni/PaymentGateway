@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<button id="rzp-button1">Pay with Razorpay</button>
+
+<script>
+    var options = {
+        "key": "@ViewBag.RazorpayKey",
+        "amount": "50000", // Amount in paise
+        "currency": "INR",
+        "name": "Your Company Name",
+        "description": "Test Transaction",
+        "image": "/images/your-logo.png", // Optional, replace with your logo URL
+        "order_id": "@ViewBag.OrderId", // Razorpay order ID passed from the controller
+        "handler": function (response) {
+            // On successful payment, redirect to PaymentSuccess action
+            window.location.href = '/RazorPay/PaymentSuccess?razorpay_payment_id=' + response.razorpay_payment_id + '&razorpay_order_id=' + response.razorpay_order_id + '&razorpay_signature=' + response.razorpay_signature;
+        },
+        "prefill": {
+            "name": "Customer Name",
+            "email": "customer@example.com",
+            "contact": "9876543210"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+
+    var rzp1 = new Razorpay(options);
+    document.getElementById('rzp-button1').onclick = function (e) {
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
+
