@@ -41,18 +41,20 @@
 </div>
 
 <script>
+    //in new update, order id need to generate from razorpay api then pass into here for getting order id and signature
     var options = '';
     document.getElementById("btnpay").addEventListener("click", function () {
         options = {
             "key": "@ViewBag.RazorpayKey",
-            "amount": (parseInt(document.getElementById('amount').value) * 100),
+            "amount": (parseInt(document.getElementById('amount').value) * 100),//for paisa
             "currency": "INR",
             "name": "Your Company Name",
-            "description": "Test Transaction",
+            "description": "Demo Transaction",
             "image": "/images/your-logo.png",
-            "order_id": "@ViewBag.OrderId",
+            // "order_id": "@ViewBag.OrderId",
             "handler": function (response) {
-                window.location.href = '/RazorPay/PaymentSuccess?razorpay_payment_id=' + response.razorpay_payment_id + '&razorpay_order_id=' + response.razorpay_order_id + '&razorpay_signature=' + response.razorpay_signature;
+                // window.location.href = '/RazorPay/PaymentSuccess?razorpay_payment_id=' + response.razorpay_payment_id + '&razorpay_order_id=' + response.razorpay_order_id + '&razorpay_signature=' + response.razorpay_signature;
+                window.location.href = '/RazorPay/PaymentSuccess?razorpay_payment_id=' + response.razorpay_payment_id;
             },
             "prefill": {
                 "name": document.getElementById('name').value,
