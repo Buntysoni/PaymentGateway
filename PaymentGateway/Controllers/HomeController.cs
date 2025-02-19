@@ -98,6 +98,33 @@ namespace PaymentGateway.Controllers
             return View();
         }
 
+        public IActionResult Upload()
+        {
+            return View();
+        }
+
+        [HttpPost]
+public async Task<IActionResult> Upload(List<IFormFile> files)
+{
+    if (files != null && files.Any())
+    {
+        foreach (var file in files)
+        {
+            if (file.Length > 0)
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName);
+                Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads"));
+                
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+            }
+        }
+        return RedirectToAction("Success", new { message = "Files uploaded successfully" });
+    }
+    return View();
+}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -119,6 +146,10 @@ namespace PaymentGateway.Controllers
             }
         }
 
+        public IActionResult FormDesigner()
+{
+    return View();
+}
         public class PhonePeConfig
         {
             public static string? MerchantId { get; set; } = "Your_Merchant_Id";

@@ -30,11 +30,11 @@
 <div class="payment-form">
     <h3 class="text-center">Payment Information</h3>
     <h5 class="text-center">(RazorPay Payment Gateway)</h5>
-    <form id="payment-form" asp-controller="RazorPay" asp-action="Index">
+    <form id="payment-form">
         <input type="text" class="form-control mb-3" id="name" asp-for="Name" placeholder="Guruji Gyan" required>
-        <input type="email" class="form-control mb-3" id="email" asp-for="Email" placeholder="example.work@gmail.com" required>
-        <input type="text" class="form-control mb-3" id="mobile" asp-for="Mobile" placeholder="+91-0000000000" required>
-        <input type="text" class="form-control mb-3" id="amount" asp-for="Amount" placeholder="100.00" required>
+        <input type="email" class="form-control mb-3" id="email" asp-for="Email" placeholder="example.work@gmail.com">
+        <input type="text" class="form-control mb-3" id="mobile" asp-for="Mobile" placeholder="+91-0000000000">
+        <input type="text" class="form-control mb-3" id="amount" asp-for="Amount" placeholder="100.00">
         <div id="card-element"></div>
         <button type="button" id="btnpay" class="btn btn-custom btn-block">Pay</button>
     </form>
@@ -43,24 +43,23 @@
 <script>
     var options = '';
     document.getElementById("btnpay").addEventListener("click", function () {
-        options = {
-            "key": "@ViewBag.RazorpayKey",
-            "amount": (parseInt(document.getElementById('amount').value) * 100),
+        var options = {
+            "key": "dasdasdad", // Your Razorpay Key
+            "amount": 100, // Amount in paise (50000 paise = 500 INR)
             "currency": "INR",
-            "name": "Your Company Name",
+            "name": "Gramin Bazaar",
             "description": "Test Transaction",
-            "image": "/images/your-logo.png",
-            "order_id": "@ViewBag.OrderId",
+            "image": "https://your-logo-url.com/logo.png",
             "handler": function (response) {
-                window.location.href = '/RazorPay/PaymentSuccess?razorpay_payment_id=' + response.razorpay_payment_id + '&razorpay_order_id=' + response.razorpay_order_id + '&razorpay_signature=' + response.razorpay_signature;
+                alert("Payment Successful. Payment ID: " + response.razorpay_payment_id);
             },
             "prefill": {
-                "name": document.getElementById('name').value,
-                "email": document.getElementById('email').value,
-                "contact": document.getElementById('mobile').value
+                "name": "John Doe",
+                "email": "john@example.com",
+                "contact": "9999999999"
             },
             "theme": {
-                "color": "#3399cc"
+                "color": "#F37254"
             }
         };
         var rzp1 = new Razorpay(options);

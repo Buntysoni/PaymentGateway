@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Form Builder</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        #form-builder {
+            display: flex;
+            gap: 20px;
+        }
+        #toolbox, #canvas {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            width: 45%;
+            min-height: 300px;
+        }
+        .draggable {
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #aaa;
+            cursor: move;
+            background-color: #f4f4f4;
+        }
+        #properties {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Drag and Drop Form Builder</h1>
+    <div id="form-builder">
+        <div id="toolbox">
+            <h2>Form Elements</h2>
+            <div class="draggable" draggable="true" data-type="text">Text Input</div>
+            <div class="draggable" draggable="true" data-type="textarea">Textarea</div>
+            <div class="draggable" draggable="true" data-type="checkbox">Checkbox</div>
+            <div class="draggable" draggable="true" data-type="radio">Radio Button</div>
+            <div class="draggable" draggable="true" data-type="select">Dropdown</div>
+            <div class="draggable" draggable="true" data-type="number">Number Input</div>
+            <div class="draggable" draggable="true" data-type="datetime">Date-Time Picker</div>
+            <div class="draggable" draggable="true" data-type="heading">Heading</div>
+            <div class="draggable" draggable="true" data-type="subheading">Subheading</div>
+            <div class="draggable" draggable="true" data-type="button">Button</div>
+        </div>
+        <div id="canvas" class="row">
+            <h2>Form Canvas</h2>
+        </div>
+    </div>
+
+    <div id="properties">
+        <h2>Element Properties</h2>
+        <label for="element-id">ID:</label>
+        <input type="text" id="element-id" placeholder="Enter ID">
+        <br>
+        <label for="label">Label:</label>
+        <input type="text" id="label" placeholder="Enter label">
+        <br>
+        <label for="placeholder">Placeholder:</label>
+        <input type="text" id="placeholder" placeholder="Enter placeholder">
+        <br>
+        <label for="name">Name:</label>
+        <input type="text" id="name" placeholder="Enter name">
+        <br>
+        <label for="options">Options (for dropdown/radio):</label>
+        <textarea id="options" placeholder="Enter options, comma-separated"></textarea>
+        <br>
+        <label for="font-size">Font Size:</label>
+        <input type="number" id="font-size" placeholder="Enter font size (px)">
+        <br>
+        <label for="col-size">Column Size (Bootstrap):</label>
+        <select id="col-size">
+            <option value="col-md-2">2</option>
+            <option value="col-md-3">3</option>
+            <option value="col-md-4">4</option>
+            <option value="col-md-6">6</option>
+            <option value="col-md-12">12</option>
+        </select>
+        <br>
+        <label for="required">Required:</label>
+        <input type="checkbox" id="required">
+        <br>
+        <button id="updateProperties">Update Properties</button>
+    </div>
+
+    <script>
+        let selectedElement = null;
+        let elementCounter = 0;
+        const formId = `form-${Date.now()}`;
+        document.getElementById('canvas').id = formId;
+
+        document.querySelectorAll('.draggable').forEach(element => {
+            element.addEventListener('dragstart', e => {
+                e.dataTransfer.setData('type', element.dataset.type);
+            });
+        });
+
+        const canvas = document.getElementById(formId);
+
+        canvas.addEventListener('dragover', e => {
+            e.preventDefault();
+        });
+
+        canvas.addEventListener('drop', e => {
+            e.preventDefault();
+            const type = e.dataTransfer.getData('type');
+            let newElement = document.createElement('div');
+            newElement.classList.add('form-group', 'col-md-3');
+            let innerElement;
+
+            switch (type) {
+                case 'text':
+                    innerElement = document.createElement('input');
+                    innerElement.type = 'text';
+                    innerElement.placeholder = 'Text Input';
+                    break;
+                case 'textarea':
+                    innerElement = document.createElement('textarea');
+                    innerElement.placeholder = 'Textarea';
+                    break;
+                case 'checkbox':
+                    innerElement = document.createElement('div');
+                    innerElement.innerHTML = `<input type="checkbox" id="element-${elementCounter}"> Checkbox`;
+                    break;
+                case 'radio':
+                    innerElement = document.createElement('div');
+                    innerElement.innerHTML = `<input type="radio" name="radio" id="element-${elementCounter}"> Radio Button`;
+                    break;
+                case 'select':
+                    innerElement = document.createElement('select');
+                    innerElement.innerHTML = '<option value="">Select an option</option>';
+                    break;
+                case 'number':
+                    innerElement = document.createElement('input');
+                    innerElement.type = 'number';
+                    break;
+                case 'datetime':
+                    innerElement = document.createElement('input');
+                    innerElement.type = 'datetime-local';
+                    break;
+                case 'heading':
+                    innerElement = document.createElement('h1');
+                    innerElement.textContent = 'Form Heading';
+                    break;
+                case 'subheading':
+                    innerElement = document.createElement('h3');
+                    innerElement.textContent = 'Form Subheading';
+                    break;
+                case 'button':
+                    innerElement = document.createElement('button');
+                    innerElement.textContent = 'Button';
+                    break;
+                default:
+                    return;
+            }
+            innerElement.id = `element-${elementCounter++}`;
+            innerElement.style.margin = '5px 0';
+            innerElement.addEventListener('click', () => editProperties(newElement));
+            newElement.appendChild(innerElement);
+            canvas.appendChild(newElement);
+        });
+
+        function editProperties(element) {
+            selectedElement = element;
+            document.getElementById('properties').style.display = 'block';
+            const idInput = document.getElementById('element-id');
+            const labelInput = document.getElementById('label');
+            const placeholderInput = document.getElementById('placeholder');
+            const nameInput = document.getElementById('name');
+            const optionsInput = document.getElementById('options');
+            const fontSizeInput = document.getElementById('font-size');
+            const colSizeInput = document.getElementById('col-size');
+            const requiredInput = document.getElementById('required');
+
+            idInput.value = element.querySelector('input, textarea, select')?.id || '';
+            labelInput.value = element.querySelector('label')?.textContent || '';
+            placeholderInput.value = element.querySelector('input, textarea')?.placeholder || '';
+            nameInput.value = element.querySelector('input, textarea, select')?.name || '';
+            optionsInput.value = '';
+
+            const optionsSource = element.querySelector('select') || element.querySelectorAll('input[type=radio]');
+            if (optionsSource.length) {
+                const options = Array.from(optionsSource.options || optionsSource).map(opt => opt.textContent || opt.value).join(', ');
+                optionsInput.value = options;
+                optionsInput.parentElement.style.display = 'block';
+            } else {
+                optionsInput.parentElement.style.display = 'none';
+            }
+
+            fontSizeInput.value = window.getComputedStyle(element.querySelector('input, textarea, select, button, h1, h3') || element).fontSize.replace('px', '');
+            colSizeInput.value = element.className.match(/col-md-\\d+/)?.[0] || 'col-md-3';
+        }
+        
+        document.getElementById('updateProperties').addEventListener('click', () => {
+            if (selectedElement) {
+                const idValue = document.getElementById('element-id').value.trim();
+                const fontSizeValue = document.getElementById('font-size').value.trim();
+                const colSizeValue = document.getElementById('col-size').value;
+                const placeholderValue = document.getElementById('placeholder').value.trim();
+                const labelValue = document.getElementById('label').value.trim();
+                const requiredChecked = document.getElementById('required').checked;
+
+                if (idValue) selectedElement.id = idValue;
+                const input = selectedElement.querySelector('input, textarea, select, button, h1, h3');
+                if (input) {
+                    input.style.fontSize = fontSizeValue ? `${fontSizeValue}px` : '';
+                    if (placeholderValue) input.placeholder = placeholderValue;
+                    input.required = requiredChecked;
+                }
+
+                const label = selectedElement.querySelector('label');
+                if (label) label.textContent = labelValue;
+
+                selectedElement.className = `form-group ${colSizeValue}`;
+            }
+        });
+    </script>
+</body>
+</html>
