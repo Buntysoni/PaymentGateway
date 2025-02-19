@@ -13,8 +13,6 @@ using Stripe.V2;
 
 namespace PhonePePaymentAPI.Controllers
 {
-    [ApiController]
-    [Route("api/payment")]
     public class PhonePeController : Controller
     {
         private readonly string _merchantId;

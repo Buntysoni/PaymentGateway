@@ -48,12 +48,12 @@ document.getElementById("pay-button").addEventListener("click", async function (
     const paymentData = {
         TransactionId: "TXN123456",
         Amount: 10000,
-        CallbackUrl: "/api/payment/callback",
+        CallbackUrl: "/phonepe/payment/callback",
         MobileNumber: "9876543210"
     };
 
     try {
-        const response = await fetch("/api/payment/initiate", {
+        const response = await fetch("/phonepe/payment/initiate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
