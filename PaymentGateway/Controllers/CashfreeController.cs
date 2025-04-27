@@ -7,6 +7,8 @@ namespace PaymentGateway.Controllers
 {
     public class CashfreeController : Controller
     {
+        string clientId = "YOURCLIENTID";
+        string SecretId = "YOURSECRETID";
         public IActionResult Index()
         {
             return View();
@@ -19,8 +21,8 @@ namespace PaymentGateway.Controllers
             var request = new RestRequest("", Method.Post);
             request.AddHeader("Content-Type", "application/json");
             request.AddHeader("x-api-version", "2022-09-01");
-            request.AddHeader("x-client-id", "YOURCLIENTID");
-            request.AddHeader("x-client-secret", "YOURSECRETKEY");
+            request.AddHeader("x-client-id", clientId);
+            request.AddHeader("x-client-secret", SecretId);
 
             var body = new
             {
@@ -56,8 +58,8 @@ namespace PaymentGateway.Controllers
         {
             var client = new RestClient($"https://sandbox.cashfree.com/pg/orders/{orderId}");
             var request = new RestRequest("", Method.Get);
-            request.AddHeader("x-client-id", "YOURCLIENTID");
-            request.AddHeader("x-client-secret", "YOURSECRETKEY");
+            request.AddHeader("x-client-id", clientId);
+            request.AddHeader("x-client-secret", SecretId);
             request.AddHeader("x-api-version", "2022-09-01");
             var response = await client.ExecuteAsync(request);
             return response.Content;
